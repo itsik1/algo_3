@@ -2,10 +2,15 @@ package tests;
 
 import Dfid.dfid;
 import Main.tree;
+import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.beans.Transient;
+
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 public class test1 {
@@ -51,6 +56,8 @@ public class test1 {
         }
     }
 
+
+
     @Test
     public void test_find_value() {
         int[] parentIndexes = {-1, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5};
@@ -61,6 +68,20 @@ public class test1 {
         System.out.println("Value = " + chosenNode.getValue());
 
         printGivenWithLine(tr1, chosenNode);
+    }
+
+    @Test
+    public void test_find_with_Dfid_given_value_only()
+    {
+        int[] parentIndexes = {-1, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5};
+        Integer[] values = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+        tree<Integer> tr1 = new tree(parentIndexes, values);
+        int wantedValue = 16;
+        dfid d = new dfid();
+        node<Integer> n = d.returnNode(tr1, wantedValue);
+
+        assertThat(n, is(not(nullValue())));
+        assertThat(n.getValue(), is(wantedValue));
     }
 
 
