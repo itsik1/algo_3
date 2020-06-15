@@ -3,26 +3,88 @@ package Dfid;
 import Main.node;
 import Main.tree;
 
-import java.util.ArrayList;
-
 public class dfid<T> implements IAlgo<T> {
 
-    boolean thereAreMoreAtNextLevel = true;
-    int maxDepth = 0;
+    private boolean thereAreMoreAtNextLevel = true;
+    private int maxDepth = 0;
+
+    private synchronized void setThereAreMoreAtNextLevel(boolean thereAreMoreAtNextLevel) {
+        this.thereAreMoreAtNextLevel = thereAreMoreAtNextLevel;
+    }
 
     @Override
-    public boolean isThereVariable(tree<T> coll, T var) {
-        if (coll.size() == 0)
+    public boolean isThereVariable(tree<T> tr, T var) {
+        if (tr.size() == 0)
             return false;
         boolean ans;
+        maxDepth = 0;
         while (thereAreMoreAtNextLevel) {
-            thereAreMoreAtNextLevel = false;
+            setThereAreMoreAtNextLevel(false);
 
-            if (checkLevel(coll.getRoot(), var, 0))
+            if (checkLevel(tr.getRoot(), var, 0))
                 return true;
             maxDepth++;
         }
         return false;
+    }
+
+    /***
+     *  In this function we shell return the node that has the value var - if we don't find it we return null
+     * @param tr - the tree to search in
+     * @param var - the wanted value to search
+     * @return the node that it's value is var, or null if it not exists
+     */
+    @Override
+    public node<T> returnNode(tree<T> tr, T var) {
+        //If there it's empty - returning null
+        if (tr.size() == 0)
+            return null;
+        //Start depth
+        maxDepth = 0;
+        //Now go over the tree recursively in iterations
+        while (thereAreMoreAtNextLevel) {
+            //First we don't know if there is more levels
+            setThereAreMoreAtNextLevel(false);
+            //cheking the level
+            node<T> currLevel = checkLevelWithNodeReturning(tr.getRoot(), var, 0);
+            if (currLevel != null)
+                return currLevel;
+            maxDepth++;
+        }
+        //If we didn't find var we return null
+        return null;
+    }
+
+    /***
+     * In this function we check recursively if we found the value till maxDepth
+     * @param currNode - the current node the check if it's the node with the value var
+     * @param var - the value the search for
+     * @param currDepth - our depth in the tree - which we check if we pass the maxDepth
+     * @return node that it's value is var, or null if we did't find it.
+     */
+    private node<T> checkLevelWithNodeReturning(node<T> currNode, T var, int currDepth) {
+        //First we check if we got to the wanted value
+        if(currNode.getValue().equals(var))
+            return currNode;
+        //otherwise we check if we acceded the limit of depth
+        if(currDepth >= maxDepth)
+        {
+            //If we have more sons - there is more levels
+            if(!thereAreMoreAtNextLevel && currNode.getSons().size() > 0)
+                setThereAreMoreAtNextLevel(true);
+            return null;
+        }
+        //Now we go over the sons
+        for(node<T> currSon : currNode.getSons())
+        {
+            //now we active the recursion
+            node<T> currAns = checkLevelWithNodeReturning(currSon, var, currDepth + 1);
+            //if we got not null - we return it
+            if(currAns != null)
+                return currAns;
+        }
+        //If we didn't got the value we shell return null
+        return null;
     }
 
 
@@ -32,7 +94,7 @@ public class dfid<T> implements IAlgo<T> {
 
         if (currDepth >= maxDepth) {
             if (!thereAreMoreAtNextLevel && currNode.getSons().size() > 0)
-                thereAreMoreAtNextLevel = true;
+                setThereAreMoreAtNextLevel(true);
             return false;
         }
         for (node<T> currSon : currNode.getSons()) {
