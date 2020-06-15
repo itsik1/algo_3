@@ -1,12 +1,11 @@
 package tests;
 
 import Dfid.dfid;
+import Main.node;
 import Main.tree;
-import org.hamcrest.Matcher;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-
-import java.beans.Transient;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -20,6 +19,27 @@ public class test1 {
         System.out.println(tr.getRoot().getSons());
         tr.printTree();
     }
+
+    public void printGivenWithLine(tree<Integer> tr, node<Integer> n) {
+        printCurrWithIndentation(tr.getRoot(), n, "");
+    }
+
+    private void printCurrWithIndentation(node<Integer> currNode, node<Integer> n, String s) {
+        if (currNode == n)// same node
+            System.out.println(ConsoleColors.BLUE + s + currNode.getValue() + ConsoleColors.RESET);
+        else
+            System.out.println(s + currNode.getValue());
+
+        for (node<Integer> currSon : currNode.getSons())
+            printCurrWithIndentation(currSon, n, s + "\t");
+    }
+
+    @Test
+    public void testMock()
+    {
+
+    }
+
 
     @Test
     public void testTree2() {
@@ -55,15 +75,18 @@ public class test1 {
             Assert.assertTrue(d.isThereVariable(tr, i));
         }
     }
-
+    tree<Integer> tr1;
+    @Before
+    public void init()
+    {
+        int[] parentIndexes = {-1, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5};
+        Integer[] values = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+        tr1 = new tree(parentIndexes, values);
+    }
 
 
     @Test
     public void test_find_value() {
-        int[] parentIndexes = {-1, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5};
-        Integer[] values = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
-        tree<Integer> tr1 = new tree(parentIndexes, values);
-
         node<Integer> chosenNode = tr1.getRoot().getSons().get(1).getSons().get(1);
         System.out.println("Value = " + chosenNode.getValue());
 
@@ -71,11 +94,7 @@ public class test1 {
     }
 
     @Test
-    public void test_find_with_Dfid_given_value_only()
-    {
-        int[] parentIndexes = {-1, 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5};
-        Integer[] values = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
-        tree<Integer> tr1 = new tree(parentIndexes, values);
+    public void test_find_with_Dfid_given_value_only() {
         int wantedValue = 16;
         dfid d = new dfid();
         node<Integer> n = d.returnNode(tr1, wantedValue);
