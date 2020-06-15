@@ -30,13 +30,20 @@ public class tree<T> implements Collection {
     public tree(int[] parentsIndexes, T[] values) {
         if (values.length == 0 || values.length != parentsIndexes.length)
             return; //Problem...
-
+        size = values.length;
         root = new node<>(null, values[0]);
         node<T>[] nodes = new node[values.length];
         nodes[0] = root;
         for (int i = 1; i < values.length; i++) {
             nodes[i] = new node<>(nodes[parentsIndexes[i]], values[i]);
             nodes[parentsIndexes[i]].getSons().add(nodes[i]);
+        }
+        int index = values.length - 1;
+        depth = 0;
+        while(index > 0)
+        {
+            index = parentsIndexes[index];
+            depth++;
         }
     }
 
