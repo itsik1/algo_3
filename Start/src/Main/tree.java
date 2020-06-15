@@ -1,5 +1,6 @@
 package Main;
 
+import javax.xml.soap.Node;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -10,19 +11,33 @@ public class tree<T> implements Collection {
     private int size;
     private int depth;
     private int avgDegree;
-    public tree(T firstValue)
-    {
-        root = new node(null,firstValue);
+
+    public tree(T firstValue) {
+        root = new node(null, firstValue);
         this.depth = 0;
         this.avgDegree = 0;
-        makeSons(null,0,0);
+        makeSons(null, 0, 0);
     }
+
     public tree(int depth, int avgDegree, T firstValue) {
         int currNumOfSons = (int) (Math.random() * avgDegree * 2) + 1;
         root = new node(null, firstValue);
         this.depth = depth;
         this.avgDegree = avgDegree;
         makeSons(root, depth, avgDegree);
+    }
+
+    public tree(int[] parentsIndexes, T[] values) {
+        if (values.length == 0 || values.length != parentsIndexes.length)
+            return; //Problem...
+
+        root = new node<>(null, values[0]);
+        node<T>[] nodes = new node[values.length];
+        nodes[0] = root;
+        for (int i = 1; i < values.length; i++) {
+            nodes[i] = new node<>(nodes[parentsIndexes[i]], values[i]);
+            nodes[parentsIndexes[i]].getSons().add(nodes[i]);
+        }
     }
 
     public int getDepth() {
@@ -101,22 +116,19 @@ public class tree<T> implements Collection {
 
     @Override
     public boolean add(Object o) {
-        if(o == null)
+        if (o == null)
             return false;
-        T toAdd = (T)o;
+        T toAdd = (T) o;
         node<T> currSon = root;
-        while(currSon.getSons().size() != 0)
-        {
+        while (currSon.getSons().size() != 0) {
             boolean wantToContinueToSons = Math.random() > 0.2;//highly possible to continue to sons
             ArrayList<node<T>> currSons = (ArrayList<node<T>>) currSon.getSons();
-            if(!wantToContinueToSons) {
+            if (!wantToContinueToSons) {
                 currSons.add(new node(currSon, toAdd));
                 currSon.setSons(currSons);
                 size++;
                 return true;
-            }
-            else
-            {
+            } else {
                 int chosenSonIndex = (int) (Math.random() * (currSons.size()));
                 currSon = currSons.get(chosenSonIndex);
             }
