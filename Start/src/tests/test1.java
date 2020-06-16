@@ -125,13 +125,4 @@ public class test1 {
         assertThat(b.getCountChecks(), is(18));
     }
 
-    @Test
-    public void test_find_with_DFS_value_Only() {
-        int wantedValue = 16;
-        DFS<Integer> d = new DFS<>();
-        node<Integer> n = d.returnNode(tr1, wantedValue);
-        assertThat(n, is(not(nullValue())));
-        assertThat(n.getValue(), is(wantedValue));
-        assertThat(d.getCountChecks(), is(14));
-    }
 }
