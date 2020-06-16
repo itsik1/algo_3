@@ -28,7 +28,7 @@ public class test1 {
     public void testTree1() {
         tree<Integer> tr = new tree<>(4, 4, 130);
         System.out.println(tr.getRoot().getSons());
-        tr.printTree();
+//        tr.printTree();
     }
 
     public void printGivenWithLine(tree<Integer> tr, node<Integer> n) {
@@ -44,13 +44,6 @@ public class test1 {
         for (node<Integer> currSon : currNode.getSons())
             printCurrWithIndentation(currSon, n, s + "\t");
     }
-//
-//    @Test
-//    public void testMock()
-//    {
-//
-//    }
-
 
     @Test
     public void testTree2() {
@@ -62,7 +55,6 @@ public class test1 {
     @Test
     public void testTree3() {
         tree<Integer> tr = new tree<>(4, 2, 130);
-//        tr.printTree();
         dfid<Integer> d = new dfid<>();
         Assert.assertTrue(d.isThereVariable(tr, tr.getRoot().getValue()));
     }
@@ -73,7 +65,6 @@ public class test1 {
         Assert.assertTrue(tr.add(1));
         dfid<Integer> d = new dfid<>();
         Assert.assertTrue(d.isThereVariable(tr, 1));
-//        tr.printTree();
     }
 
     @Test
@@ -84,16 +75,6 @@ public class test1 {
             dfid<Integer> d = new dfid<>();
             Assert.assertTrue(d.isThereVariable(tr, i));
         }
-    }
-
-
-    @Test
-    public void test_find_value() {
-        node<Integer> chosenNode = tr1.getRoot().getSons().get(1).getSons().get(1);
-        System.out.println("Value = " + chosenNode.getValue());
-
-        printGivenWithLine(tr1, chosenNode);
-
     }
 
     @Test
@@ -121,7 +102,7 @@ public class test1 {
         BFS<Integer> b = new BFS<>();
         node<Integer> n = b.returnNode(tr1, wantedValue);
         assertThat(n, is(nullValue()));
-        assertThat(b.getCountChecks(), is(31));
+        assertThat(b.getCountChecks(), is(19));
     }
 
     @Test
@@ -130,7 +111,7 @@ public class test1 {
         DFS<Integer> d = new DFS<>();
         node<Integer> n = d.returnNode(tr1, wantedValue);
         assertThat(n, is(nullValue()));
-        assertThat(d.getCountChecks(), is(0));
+        assertThat(d.getCountChecks(), is(18));
     }
 
 
@@ -141,7 +122,7 @@ public class test1 {
         node<Integer> n = b.returnNode(tr1, wantedValue);
         assertThat(n, is(not(nullValue())));
         assertThat(n.getValue(), is(wantedValue));
-        assertThat(b.getCountChecks(), is(27));
+        assertThat(b.getCountChecks(), is(18));
     }
 
     @Test
@@ -153,20 +134,4 @@ public class test1 {
         assertThat(n.getValue(), is(wantedValue));
         assertThat(d.getCountChecks(), is(14));
     }
-
-
-    /* @Test
-     public void test_tree_depth() {
-         tree<Integer> tr = new tree<>(4, 10, 130);
-         ArrayList<node<Integer>> al = new ArrayList();
-         al.add(tr.getRoot());
-         int count = 0;
-         node<Integer> currNode;
-         while (!al.isEmpty() && count < 10000) {
-             count++;
-             currNode = al.remove(0);
-
-         }
-     }*/
-
 }
